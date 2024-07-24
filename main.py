@@ -9,7 +9,7 @@ load_dotenv()
 MIDJOURNEY_API_KEY = os.getenv("MID_JOURNEY_AUTH_TOKEN")
 
 st.title("Welcome to Midjourney!")
-input_text = st.text_input("Please enter your message")
+input_text = st.text_area("Please enter your message")
 
 def post_image_request(prompt: str):
         
@@ -20,8 +20,7 @@ def post_image_request(prompt: str):
         "Authorization": f"Bearer {MIDJOURNEY_API_KEY}"
     }
     data = {
-        "prompt": f""" Image must be Realistic. Here is the image description:
-    {prompt}""" 
+        "prompt": f"""{prompt}""" 
     }
     # Making the POST request
     response = requests.post(url, json=data, headers=headers)
