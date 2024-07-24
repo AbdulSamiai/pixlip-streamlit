@@ -3,10 +3,12 @@ import time
 import requests
 
 import streamlit as st
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
-MIDJOURNEY_API_KEY = os.getenv("MID_JOURNEY_AUTH_TOKEN")
+# load_dotenv()
+# MIDJOURNEY_API_KEY = os.getenv("MID_JOURNEY_AUTH_TOKEN")
+
+MIDJOURNEY_API_KEY = st.secrets["MID_JOURNEY_AUTH_TOKEN"]
 
 st.title("Welcome to Midjourney!")
 input_text = st.text_area("Please enter your message")
