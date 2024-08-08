@@ -155,6 +155,7 @@ def get_random_image():
     return url
 if st.button("Submit"):
     if input_text:
+        input_text = "Modular walls with integration LED backlighting makes the wall graphics appear to glow, walls with sharp edges. No other light above." + input_text
         with st.spinner("Processing..."):
             random_image = get_random_image()
             print(random_image)
