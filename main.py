@@ -7,6 +7,8 @@ import streamlit as st
 import json
 from leonardo_api import Leonardo
 
+from leonardo import process_image as process_image_leo
+
 MIDJOURNEY_API_KEY = os.getenv("MID_JOURNEY_AUTH_TOKEN")
 LEONARD_API_KEY = os.getenv("LEONARD_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -84,14 +86,10 @@ def post_image_request_dalle(prompt: str):
     response = subprocess.run(curl_command, capture_output=True, text=True, check=True)
     image_url = json.loads(response.stdout)['data'][0]['url']
     return image_url
-def post_image_request_leo(prompt: str):
-    response = leonardo.post_generations(prompt=prompt, num_images=1,
-                                           model_id='e316348f-7773-490e-adcd-46757c738eb7', width=1024, height=768,
-                                           guidance_scale=7)
-    generation_id = response['sdGenerationJob']['generationId']
-    response = leonardo.get_single_generation(generation_id)
-    response = leonardo.wait_for_image_generation(generation_id=generation_id)
-    return response['url']
+
+
+
+
 def get_processing_button(message_id: str):
     url = "https://api.imaginepro.ai/api/v1/midjourney/button"
     headers = {
@@ -163,7 +161,7 @@ if st.button("Submit"):
             print(random_image)
             message_id = post_image_request_midjourney(f"{random_image} {mid_journey_stable_text}")
             dalle_image_url = post_image_request_dalle(dalle_input_text)
-            leo_image_url = post_image_request_leo(input_text)
+            leo_image_url = process_image_leo(random_image, mid_journey_stable_text, LEONARD_API_KEY)
             stable_diff_image_id = post_image_request_stable_diffusion(random_image, mid_journey_stable_text)
             if stable_diff_image_id:
                 stable_image = get_stable_image(stable_diff_image_id)
@@ -173,14 +171,15 @@ if st.button("Submit"):
             if dalle_image_url:
                 st.title("Idea 2")
                 st.image(dalle_image_url)
+            if leo_image_url:
+                    st.title("Idea 3")
+                    st.image(leo_image_url)
             if message_id:
                 image_url = get_image(message_id)
                 if image_url:
-                    st.title("Idea 3")
-                    st.image(image_url)
-                if leo_image_url:
                     st.title("Idea 4")
-                    st.image(leo_image_url)
+                    st.image(image_url)
+                
     else:
         st.write("Please enter some text to proceed.")
 
