@@ -16,7 +16,7 @@ leonardo = Leonardo(auth_token=LEONARD_API_KEY)
 openai_key = OPENAI_API_KEY
 stable_key = STABLE_DIFFUSION_API_KEY   
 
-st.title("Welcome to Pixlip!")
+st.title("Welcome to PIXLIP AI!")
 input_text = st.text_area("Please enter your prompt")
 def post_image_request_midjourney(prompt: str):
     # Configuration for the POST request
@@ -166,18 +166,18 @@ if st.button("Submit"):
             if stable_diff_image_id:
                 stable_image = get_stable_image(stable_diff_image_id)
                 if stable_image:
-                    st.title("Stable Diffusion Image")
+                    st.title("Idea 1")
                     st.image(stable_image)
             if dalle_image_url:
-                st.title("Dalle Image")
+                st.title("Idea 2")
                 st.image(dalle_image_url)
             if message_id:
                 image_url = get_image(message_id)
                 if image_url:
-                    st.title("Midjourney Image")
+                    st.title("Idea 3")
                     st.image(image_url)
                 if leo_image_url:
-                    st.title("Leonardo Image")
+                    st.title("Idea 4")
                     st.image(leo_image_url)
     else:
         st.write("Please enter some text to proceed.")
