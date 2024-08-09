@@ -161,10 +161,10 @@ if st.button("Submit"):
         with st.spinner("Processing..."):
             random_image = get_random_image()
             print(random_image)
-            message_id = post_image_request_midjourney(f"{random_image} {input_text}")
-            dalle_image_url = post_image_request_dalle(input_text)
+            message_id = post_image_request_midjourney(f"{random_image} {mid_journey_stable_text}")
+            dalle_image_url = post_image_request_dalle(dalle_input_text)
             leo_image_url = post_image_request_leo(input_text)
-            stable_diff_image_id = post_image_request_stable_diffusion(random_image, input_text)
+            stable_diff_image_id = post_image_request_stable_diffusion(random_image, mid_journey_stable_text)
             if stable_diff_image_id:
                 stable_image = get_stable_image(stable_diff_image_id)
                 if stable_image:
