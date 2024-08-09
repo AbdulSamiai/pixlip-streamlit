@@ -52,7 +52,7 @@ def post_image_request_stable_diffusion(image_url:str, prompt: str):
         "num_inference_steps": "30",
         "safety_checker": "no",
         "enhance_prompt": "yes",
-        "guidance_scale": 7.5,
+        "guidance_scale": 12,
         "strength": 0.3,
         "seed": None,
         "base64": "no",
@@ -155,7 +155,9 @@ def get_random_image():
     return url
 if st.button("Submit"):
     if input_text:
-        input_text = "Modular walls with integration LED backlighting makes the wall graphics appear to glow, walls with sharp edges. No other light above." + input_text
+        dalle_input_text = "Create a photo of a trade show booth that has a clean, professional design with a focus on minimalistic and modern aesthetics. The booth features large, illuminated modular walls with high-quality printed graphics. The booth uses subtle lighting to enhance the visibility of the text and graphics, creating a sleek and polished look. The inclusion of potted plants adds a touch of natural elements, softening the overall industrial feel. The central counter makes it a well-rounded and visually appealing presentation in an exhibition setting. The booth is about" + input_text
+        mid_journey_stable_text = "Modular booth walls with integration LED backlighting makes the wall graphics appear to glow, walls with sharp edges. No other light above."+input_text
+        
         with st.spinner("Processing..."):
             random_image = get_random_image()
             print(random_image)
