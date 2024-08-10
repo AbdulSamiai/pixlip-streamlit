@@ -19,7 +19,13 @@ openai_key = OPENAI_API_KEY
 stable_key = STABLE_DIFFUSION_API_KEY   
 
 st.title("Welcome to PIXLIP AI!")
-input_text = st.text_area("Please enter your prompt")
+
+dalle_text = st.text_area("Please enter Dall e prompt")
+stable_text = st.text_area("Please enter Stable Diffusion prompt")
+leonardo_text = st.text_area("Please enter Leonardo prompt")
+mid_journey_text = st.text_area("Please enter MidJourney prompt")
+
+
 def post_image_request_midjourney(prompt: str):
     # Configuration for the POST request
     url = "https://api.imaginepro.ai/api/v1/midjourney/imagine"
@@ -151,29 +157,31 @@ def get_random_image():
     random_number = random.randint(2, 5)
     url = f"https://backend.exafy.io/media/tmpimages/Picture{random_number}.png"
     return url
+
+
 if st.button("Submit"):
-    if input_text:
-        dalle_input_text = "Create a photo of a trade show booth that has a clean, professional design with a focus on minimalistic and modern aesthetics. The booth features large, illuminated modular walls with high-quality printed graphics. The booth uses subtle lighting to enhance the visibility of the text and graphics, creating a sleek and polished look. The inclusion of potted plants adds a touch of natural elements, softening the overall industrial feel. The central counter makes it a well-rounded and visually appealing presentation in an exhibition setting. The booth is about" + input_text
-        mid_journey_stable_text = "Modular booth walls with integration LED backlighting makes the wall graphics appear to glow, walls with sharp edges. No other light above."+input_text
-        
-        with st.spinner("Processing..."):
-            random_image = get_random_image()
-            print(random_image)
-            message_id = post_image_request_midjourney(f"{random_image} {mid_journey_stable_text}")
-            dalle_image_url = post_image_request_dalle(dalle_input_text)
-            leo_image_url = process_image_leo(random_image, mid_journey_stable_text, LEONARD_API_KEY)
-            stable_diff_image_id = post_image_request_stable_diffusion(random_image, mid_journey_stable_text)
-            if stable_diff_image_id:
-                stable_image = get_stable_image(stable_diff_image_id)
-                if stable_image:
-                    st.title("Idea 1")
-                    st.image(stable_image)
+    random_image = get_random_image()
+    if dalle_text:  
+        with st.spinner("Dalle Processing..."):
+            dalle_image_url = post_image_request_dalle(dalle_text)
             if dalle_image_url:
                 st.title("Idea 2")
                 st.image(dalle_image_url)
-            if leo_image_url:
-                    st.title("Idea 3")
-                    st.image(leo_image_url)
+    if stable_text:
+            stable_image_id = post_image_request_stable_diffusion(random_image, stable_text)
+            if stable_image_id:
+                stable_image = get_stable_image(stable_image_id)
+                if stable_image:
+                    st.title("Idea 1")
+                    st.image(stable_image)
+    if leonardo_text:
+        leo_image_url = process_image_leo(random_image, leonardo_text, LEONARD_API_KEY)
+        if leo_image_url:
+                st.title("Idea 3")
+                st.image(leo_image_url)
+                
+    if mid_journey_text:
+            message_id = post_image_request_midjourney(f"{random_image} {mid_journey_text}")
             if message_id:
                 image_url = get_image(message_id)
                 if image_url:
