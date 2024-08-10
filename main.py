@@ -168,25 +168,28 @@ if st.button("Submit"):
                 st.title("Idea 2")
                 st.image(dalle_image_url)
     if stable_text:
-            stable_image_id = post_image_request_stable_diffusion(random_image, stable_text)
-            if stable_image_id:
-                stable_image = get_stable_image(stable_image_id)
-                if stable_image:
-                    st.title("Idea 1")
-                    st.image(stable_image)
+            with st.spinner("Stable Processing..."):
+                stable_image_id = post_image_request_stable_diffusion(random_image, stable_text)
+                if stable_image_id:
+                    stable_image = get_stable_image(stable_image_id)
+                    if stable_image:
+                        st.title("Idea 1")
+                        st.image(stable_image)
     if leonardo_text:
-        leo_image_url = process_image_leo(random_image, leonardo_text, LEONARD_API_KEY)
-        if leo_image_url:
-                st.title("Idea 3")
-                st.image(leo_image_url)
-                
+        with st.spinner("Leonardo Processing..."):
+            leo_image_url = process_image_leo(random_image, leonardo_text, LEONARD_API_KEY)
+            if leo_image_url:
+                    st.title("Idea 3")
+                    st.image(leo_image_url)
+
     if mid_journey_text:
-            message_id = post_image_request_midjourney(f"{random_image} {mid_journey_text}")
-            if message_id:
-                image_url = get_image(message_id)
-                if image_url:
-                    st.title("Idea 4")
-                    st.image(image_url)
+            with st.spinner("Mid Journey Processing..."):
+                message_id = post_image_request_midjourney(f"{random_image} {mid_journey_text}")
+                if message_id:
+                    image_url = get_image(message_id)
+                    if image_url:
+                        st.title("Idea 4")
+                        st.image(image_url)
                 
     else:
         st.write("Please enter some text to proceed.")
