@@ -155,7 +155,7 @@ def get_stable_image(image_id:str):
     return data_dict['output'][0]
 def get_random_image():
     random_number = random.randint(2, 5)
-    url = f"https://backend.exafy.io/media/tmpimages/Picture{random_number}.png"
+    url = f"https://backend.exafy.io/media/tmpimages/Picture{random_number}.jpg"
     return url
 
 
@@ -176,7 +176,7 @@ if st.button("Submit"):
         if leo_image_url:
                 st.title("Idea 3")
                 st.image(leo_image_url)
-                
+
         message_id = post_image_request_midjourney(f"{random_image} {mid_journey_text}")
         if message_id:
             image_url = get_image(message_id)
