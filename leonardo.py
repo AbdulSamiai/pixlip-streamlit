@@ -76,7 +76,7 @@ def process_image(image_url, prompt, api_key):
             {
                 "initImageId": init_image_id,
                 "initImageType": "UPLOADED",
-                "preprocessorId": 67,
+                "preprocessorId": 100,
                 "strengthType": "High",
                 "influence": 0.5
             }

@@ -5,16 +5,18 @@ import time
 import requests
 import streamlit as st
 import json
+
 from leonardo_api import Leonardo
 
-from leonardo import process_image as process_image_leo
+LEONARD_API_KEY = os.getenv("LEONARD_API_KEY")
+leonardo = Leonardo(auth_token=LEONARD_API_KEY)
 
 MIDJOURNEY_API_KEY = os.getenv("MID_JOURNEY_AUTH_TOKEN")
 LEONARD_API_KEY = os.getenv("LEONARD_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 STABLE_DIFFUSION_API_KEY = os.getenv("STABLE_DIFFUSION_API_KEY")
 
-leonardo = Leonardo(auth_token=LEONARD_API_KEY)
+
 openai_key = OPENAI_API_KEY
 stable_key = STABLE_DIFFUSION_API_KEY   
 
@@ -25,6 +27,16 @@ stable_text = st.text_area("Please enter Stable Diffusion prompt")
 leonardo_text = st.text_area("Please enter Leonardo prompt")
 mid_journey_text = st.text_area("Please enter MidJourney prompt")
 
+
+
+def post_image_request_leo(prompt: str):
+    response = leonardo.post_generations(prompt=prompt, num_images=1,
+                                           model_id='e316348f-7773-490e-adcd-46757c738eb7', width=1024, height=768,
+                                           guidance_scale=7)
+    generation_id = response['sdGenerationJob']['generationId']
+    response = leonardo.get_single_generation(generation_id)
+    response = leonardo.wait_for_image_generation(generation_id=generation_id)
+    return response['url']
 
 def post_image_request_midjourney(prompt: str):
     # Configuration for the POST request
@@ -47,23 +59,24 @@ def post_image_request_midjourney(prompt: str):
         print("Failed to fetch data:", response.status_code)
     return message_id
 # The below function is not used as the key is not valid
-def post_image_request_stable_diffusion(image_url:str, prompt: str):
-    url = "https://stablediffusionapi.com/api/v3/img2img"
+def post_image_request_stable_diffusion(prompt: str):
+    url = "https://stablediffusionapi.com/api/v3/text2img"
     payload = json.dumps({
         "key": stable_key,
         "prompt": prompt,
         "negative_prompt": None,
-        "init_image": image_url,
         "width": "512",
         "height": "512",
         "samples": "1",
-        "num_inference_steps": "30",
-        "safety_checker": "no",
-        "enhance_prompt": "yes",
-        "guidance_scale": 12,
-        "strength": 0.3,
+        "num_inference_steps": "20",
         "seed": None,
-        "base64": "no",
+        "guidance_scale": 7.5,
+        "safety_checker": "yes",
+        "multi_lingual": "no",
+        "panorama": "no",
+        "self_attention": "no",
+        "upscale": "no",
+        "embeddings_model": None,
         "webhook": None,
         "track_id": None
     })
@@ -74,6 +87,7 @@ def post_image_request_stable_diffusion(image_url:str, prompt: str):
     response = json.loads(response.text)
     image_id = response['id']
     return image_id
+
 def post_image_request_dalle(prompt: str):
     data = json.dumps({
     "model": "dall-e-3",
@@ -138,6 +152,7 @@ def get_image(message_id: str):
             elif status == "DONE":
                 print("Done")
                 return get_task_bar.json()['uri']
+
 def get_stable_image(image_id:str):
     fetch_url = f"https://stablediffusionapi.com/api/v3/fetch/{image_id}"
     headers = {
@@ -160,32 +175,39 @@ def get_random_image():
 
 
 if st.button("Submit"):
+    idea=1
     random_image = get_random_image()
     with st.spinner("Processing..."):
         if dalle_text:
-            dalle_image_url = post_image_request_dalle(dalle_text)
-            if dalle_image_url:
-                st.title("Idea 2")
-                st.image(dalle_image_url)
+            for i in range(0,4):
+                dalle_image_url = post_image_request_dalle(dalle_text)
+                if dalle_image_url:
+                    st.title("Idea ",idea)
+                    st.image(dalle_image_url)
+                    idea+=1
         if stable_text:
-            stable_image_id = post_image_request_stable_diffusion(random_image, stable_text)
-            if stable_image_id:
-                stable_image = get_stable_image(stable_image_id)
-                if stable_image:
-                    st.title("Idea 1")
-                    st.image(stable_image)
+            for i in range(0,4):
+                stable_image_id = post_image_request_stable_diffusion(stable_text)
+                if stable_image_id:
+                    stable_image = get_stable_image(stable_image_id)
+                    if stable_image:
+                        st.title("Idea ",idea)
+                        st.image(stable_image)
+                        idea+=1
         if leonardo_text:
-            leo_image_url = process_image_leo(random_image, leonardo_text, LEONARD_API_KEY)
-            if leo_image_url:
-                    st.title("Idea 3")
-                    st.image(leo_image_url)
+            for i in range(0,4):
+                leo_image_url = post_image_request_leo(leonardo_text)
+                if leo_image_url:
+                        st.title("Idea ",idea)
+                        st.image(leo_image_url)
+                        idea+=1
         if mid_journey_text:
 
             message_id = post_image_request_midjourney(f"{random_image} {mid_journey_text}")
             if message_id:
                 image_url = get_image(message_id)
                 if image_url:
-                    st.title("Idea 4")
+                    st.title("Idea 12 to 16")
                     st.image(image_url)
     
 
