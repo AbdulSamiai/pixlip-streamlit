@@ -182,7 +182,7 @@ if st.button("Submit"):
             for i in range(0,4):
                 dalle_image_url = post_image_request_dalle(dalle_text)
                 if dalle_image_url:
-                    st.title("Idea ",idea)
+                    st.title(f"Idea {idea}")
                     st.image(dalle_image_url)
                     idea+=1
         if stable_text:
@@ -191,14 +191,14 @@ if st.button("Submit"):
                 if stable_image_id:
                     stable_image = get_stable_image(stable_image_id)
                     if stable_image:
-                        st.title("Idea ",idea)
+                        st.title(f"Idea {idea}")
                         st.image(stable_image)
                         idea+=1
         if leonardo_text:
             for i in range(0,4):
                 leo_image_url = post_image_request_leo(leonardo_text)
                 if leo_image_url:
-                        st.title("Idea ",idea)
+                        st.title(f"Idea {idea}")
                         st.image(leo_image_url)
                         idea+=1
         if mid_journey_text:
