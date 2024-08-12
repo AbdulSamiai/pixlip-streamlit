@@ -31,7 +31,7 @@ mid_journey_text = st.text_area("Please enter MidJourney prompt")
 
 def post_image_request_leo(prompt: str):
     response = leonardo.post_generations(prompt=prompt, num_images=1,
-                                           model_id='e316348f-7773-490e-adcd-46757c738eb7', width=1024, height=768,
+                                           model_id='b24e16ff-06e3-43eb-8d33-4416c2d75876', width=1024, height=768,
                                            guidance_scale=7)
     generation_id = response['sdGenerationJob']['generationId']
     response = leonardo.get_single_generation(generation_id)
