@@ -22,10 +22,7 @@ stable_key = STABLE_DIFFUSION_API_KEY
 
 st.title("Welcome to PIXLIP AI!")
 
-dalle_text = st.text_area("Please enter Dall e prompt")
-stable_text = st.text_area("Please enter Stable Diffusion prompt")
-leonardo_text = st.text_area("Please enter Leonardo prompt")
-mid_journey_text = st.text_area("Please enter MidJourney prompt")
+input_text = st.text_area("Enter a prompt here...")
 
 
 
@@ -178,32 +175,37 @@ if st.button("Submit"):
     idea=1
     random_image = get_random_image()
     with st.spinner("Processing..."):
-        if dalle_text:
+        if input_text:
             for i in range(0,4):
-                dalle_image_url = post_image_request_dalle(dalle_text)
+                dalle_image_url = post_image_request_dalle(f"""Make a photo of an exhibition island booth with 1 meter standard width modular walls and no luminous bodies or lights on top of the walls. 
+1. All Walls Illuminated Modular Lightboxes: feature every single wall as modular LED lightboxes, These lightboxes should be the central focus, creating a bright and attention-grabbing display. walls are lightboxes, The booth should have a clean, modular design that appears effortlessly assembled, with seamless connections between panels. No luminous body above
+2. Minimalistic and Modern Aesthetics: minimalistic design. Incorporate large, vibrant graphics displayed on the shining walls. The booth should look modern with smooth surfaces and minimal clutter. No lights or luminous bodies on the walls and no ceiling on top of the stand 
+3. Modular Components : Include features like counters, shelves, or brochure holders that seamlessly attach to the lightbox frames. No light bulbs above 
+4. No luminous bodies above the stand: Ensure no light bulbs and no ceiling, no lights on top of the walls. only even glowing walls are lightboxes to make the graphics pop 
+The glowing walls display this:{input_text}""")
                 if dalle_image_url:
                     st.title(f"Idea {idea}")
                     st.image(dalle_image_url)
                     idea+=1
-        if stable_text:
+        if input_text:
             for i in range(0,4):
-                stable_image_id = post_image_request_stable_diffusion(stable_text)
+                stable_image_id = post_image_request_stable_diffusion(f"""Show trade show booth in busy Exhibition Hall built with glowing LED 1 meter width wall panels.
+The glowing wall panels display full size images of:{input_text}""")
                 if stable_image_id:
                     stable_image = get_stable_image(stable_image_id)
                     if stable_image:
                         st.title(f"Idea {idea}")
                         st.image(stable_image)
                         idea+=1
-        if leonardo_text:
+        if input_text:
             for i in range(0,4):
-                leo_image_url = post_image_request_leo(leonardo_text)
+                leo_image_url = post_image_request_leo(f"""Show trade show booth in busy Exhibition Hall built with glowing LED 1 meter width wall panels. Modular glowing booth walls with integration LED backlighting makes the wall graphics appear to glow, walls with sharp edges. No other light above. The glowing wall panels display full size images of:{input_text}""")
                 if leo_image_url:
                         st.title(f"Idea {idea}")
                         st.image(leo_image_url)
                         idea+=1
-        if mid_journey_text:
-
-            message_id = post_image_request_midjourney(f"{random_image} {mid_journey_text}")
+        if input_text:
+            message_id = post_image_request_midjourney(f"{random_image} Modular glowing booth walls with integration LED backlighting makes the wall graphics appear to glow, walls with sharp edges. No other light above. Create a PIXLIP booth for:{input_text}")
             if message_id:
                 image_url = get_image(message_id)
                 if image_url:
