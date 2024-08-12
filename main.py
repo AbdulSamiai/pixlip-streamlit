@@ -209,7 +209,7 @@ The glowing wall panels display full size images of:{input_text}""")
             if message_id:
                 image_url = get_image(message_id)
                 if image_url:
-                    st.title("Idea 12 to 16")
+                    st.title("Idea 13 to 16")
                     st.image(image_url)
     
 
